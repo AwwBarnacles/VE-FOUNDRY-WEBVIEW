@@ -1,7 +1,7 @@
 {
   "name": "ve-foundry-client",
   "packageManager": "yarn@4.12.0",
-  "version": "1.0.36",
+  "version": "1.0.36-webview",
   "license": "MIT",
   "description": "VE Foundry Client",
   "main": ".vite/build/main.js",
@@ -25,7 +25,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Silvestrae/ve-foundry-client.git"
+    "url": "https://github.com/AwwBarnacles/VE-FOUNDRY-WEBVIEW.git"
   },
   "build": {
     "extends": "builder.config.js"
