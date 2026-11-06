@@ -2367,8 +2367,32 @@ function createWindow(options: CreateWindowOptions = {}): BrowserWindow {
       nodeIntegration: false,
       contextIsolation: true,
       webgl: true,
+      webviewTag: true,
       session: localSession,
     },
+  });
+  // Foundry pages are remote content, so only allow <webview>s on user-configured domains, with no Node access.
+  win.webContents.on("will-attach-webview", (event, webPreferences, params) => {
+    let allowed = false;
+    try {
+      const { protocol, hostname } = new URL(params.src);
+      const domains = getAppConfig().webviewAllowedDomains ?? ["demiplane.com"];
+      allowed =
+        protocol === "https:" &&
+        domains.some(
+          (d) => !!d && (hostname === d || hostname.endsWith(`.${d}`)),
+        );
+    } catch {
+      // Invalid URL: leave disallowed.
+    }
+    if (!allowed) {
+      event.preventDefault();
+      return;
+    }
+    delete webPreferences.preload;
+    webPreferences.nodeIntegration = false;
+    webPreferences.contextIsolation = true;
+    webPreferences.sandbox = true;
   });
   const webContentsId = win.webContents.id;
   windowsData[webContentsId] =
